@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 // lead sounds ordered by their unicode code point
 var leadSounds = []rune{
 	'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ',
@@ -27,7 +31,7 @@ var tailSounds = []rune{
 	'ㅌ', 'ㅍ', 'ㅎ',
 }
 
-const KOREAN_OFFSET rune = 0xAC00
+const korean_offset rune = 0xAC00
 
 // Char is a representation of Korean alphabet with its building parts
 type Char struct {
@@ -39,7 +43,7 @@ type Char struct {
 // Deconstruct deconstructs a Korean alphabet into its lead, vowel, and tail characters
 // and returns a Char containing containing those jvalues
 func Deconstruct(c rune) Char {
-	codeNum := c - KOREAN_OFFSET
+	codeNum := c - korean_offset
 
 	tailNum := codeNum % 28
 	vowelNum := (codeNum / 28) % 21
@@ -59,4 +63,15 @@ func Deconstruct(c rune) Char {
 		Vowel: vowel,
 		Tail:  tail,
 	}
+}
+
+// ValidateJamo validates that a character is a Korean 'Jamo'
+func ValidateJamo(c rune) bool {
+	fmt.Printf("validating jamo: %0x ", c)
+	return c >= 0x1100 && c <= 0x11FF
+}
+
+// ValidateSyllable validates that a character is a Korean syllable
+func ValidateSyllable(c rune) bool {
+	return c >= 0xAC00 && c <= 0xD7A3
 }
